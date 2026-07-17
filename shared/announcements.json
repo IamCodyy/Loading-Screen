@@ -1,0 +1,30 @@
+[
+    {
+        "title": "Test Announcement",
+        "message": "No description provided",
+        "author": "Carol",
+        "time": "August 14, 2023 12:00 PM",
+        "image": ""
+    },
+    {
+        "title": "Test Announcement 2",
+        "message": "No description provided",
+        "author": "Bob",
+        "time": "August 14, 2023 12:00 PM",
+        "image": ""
+    },
+    {
+        "title": "Test Announcement 3",
+        "message": "No description provided",
+        "author": "Barry",
+        "time": "August 14, 2023 12:00 PM",
+        "image": ""
+    },
+    {
+        "title": "Test Announcement 4",
+        "message": "No description provided",
+        "author": "Harry",
+        "time": "August 14, 2023 12:00 PM",
+        "image": ""
+    }
+]

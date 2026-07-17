@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+    <div id="background"></div>
+    <div class="overlay"></div>
+    <header class="header">
+        <img id="logo" alt="Server Logo" >
+        <div class="server">
+            <h1 id="serverName">SERVER NAME</h1>
+            <p id="statusText">CONNECTING TO SERVER</p>
+        </div>
+        <div class="clock" id="clock">00:00</div>
+    </header>
+    <section class="status-panel" id="statusPanel">
+        <div class="loader-ring"></div>
+        <h2 id="loadingStatus">CONNECTING</h2>
+        <p id="loadingResource">Initializing resources...</p>
+    </section>
+    <main>
+        <section class="updates">
+            <h2>ANNOUNCEMENTS</h2>
+            <div id="announcementContainer"></div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="progress">
+            <div id="progressFill"></div>
+            <div class="shine"></div>
+        </div>
+        <nav class="socials">
+            <a id="discord" target="_blank" rel="noopener noreferrer" aria-label="Discord" >
+                <i class="fa-brands fa-discord"></i>
+            </a>
+            <a id="instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram" >
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a id="twitter" target="_blank" rel="noopener noreferrer" aria-label="X" >
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </nav>
+    </footer>
+    <script src="../shared/config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
