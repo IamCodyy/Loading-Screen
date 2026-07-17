@@ -9,10 +9,9 @@ const guildId = process.env.GUILD_ID || config.guildId;
 const channelId = process.env.CHANNEL_ID || config.channelId;
 const announcementLimit = parseInt(process.env.ANNOUNCEMENT_LIMIT, 10) || config.announcementLimit;
 const updateInterval = parseInt(process.env.UPDATE_INTERVAL, 10) || config.updateInterval || 60000;
-const testMode = process.env.TEST_MODE === "true" || config.testMode === true;
 
-if (!testMode && (!token || !guildId || !channelId)) {
-    console.error("Missing required Discord bot configuration. Please set DISCORD_BOT_TOKEN, GUILD_ID, and CHANNEL_ID or enable TEST_MODE=true.");
+if (!token || !guildId || !channelId) {
+    console.error("Missing required Discord bot configuration. Please set DISCORD_BOT_TOKEN, GUILD_ID, and CHANNEL_ID.");
     process.exit(1);
 }
 
@@ -33,27 +32,6 @@ function resolveOutputFile(filePath) {
 }
 
 const outputFile = resolveOutputFile(process.env.OUTPUT_FILE || config.outputFile);
-
-function createSampleAnnouncements() {
-    return [
-        {
-            title: "Test Announcement",
-            message: "This is sample data from TEST_MODE.",
-            author: "Bot Test",
-            time: "just now",
-            image: "",
-            readMoreUrl: ""
-        },
-        {
-            title: "Loading Screen Check",
-            message: "The announcements file is being read correctly.",
-            author: "System",
-            time: "a moment ago",
-            image: "",
-            readMoreUrl: ""
-        }
-    ];
-}
 
 function truncateText(text, maxLength = 260) {
     if (!text) {
@@ -81,14 +59,6 @@ function formatTimestamp(timestamp) {
 
 async function updateAnnouncements() {
     try {
-        if (testMode) {
-            const data = createSampleAnnouncements();
-            fs.mkdirSync(path.dirname(outputFile), { recursive: true });
-            fs.writeFileSync(outputFile, JSON.stringify(data, null, 4));
-            console.log(`Test mode enabled -> ${outputFile}`);
-            return;
-        }
-
         const guild = await client.guilds.fetch(guildId);
         const channel = await guild.channels.fetch(channelId);
         const messages = await channel.messages.fetch({limit: announcementLimit});
@@ -132,7 +102,7 @@ async function updateAnnouncements() {
     } catch (error) {
         const isAccessError = error?.code === 50001 || error?.status === 403 || error?.message?.includes("Missing Access") || error?.message?.includes("Missing Permissions");
         if (isAccessError) {
-            const data = createSampleAnnouncements();
+            const data = [];
             fs.mkdirSync(path.dirname(outputFile), { recursive: true });
             fs.writeFileSync(outputFile, JSON.stringify(data, null, 4));
             console.warn("Discord access denied for the configured channel.");
@@ -144,27 +114,21 @@ async function updateAnnouncements() {
     }
 }
 
-if (testMode) {
-    console.log("Test mode enabled. Writing sample announcements to disk.");
-    updateAnnouncements();
+client.once("ready", async () => {
+    console.log(`${client.user.tag} online`);
+    await updateAnnouncements();
     setInterval(updateAnnouncements, updateInterval);
-} else {
-    client.once("ready", async () => {
-        console.log(`${client.user.tag} online`);
-        await updateAnnouncements();
-        setInterval(updateAnnouncements, updateInterval);
-    });
+});
 
-    client.on("messageCreate", async (message) => {
+client.on("messageCreate", async (message) => {
     if (message.channelId !== channelId || message.author.bot) {
         return;
     }
 
-        await updateAnnouncements();
-    });
+    await updateAnnouncements();
+});
 
-    client.login(token).catch((error) => {
-        console.error("Failed to login to Discord:", error);
-        process.exit(1);
-    });
-}
+client.login(token).catch((error) => {
+    console.error("Failed to login to Discord:", error);
+    process.exit(1);
+});

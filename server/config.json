@@ -5,6 +5,5 @@
     "announcementLimit": 4, // Number of announcement cards to display on the loading screen
     "outputFile": "../shared/announcements.json",
     "apiPort": 3010,
-    "testMode": false,
     "updateInterval": 300000 // 5 Minutes in miliseconds
 }
