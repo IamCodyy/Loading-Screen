@@ -1,5 +1,5 @@
 window.LoadingConfig = {
-    previewMode: true, // Set to true to enable the fake progress bar for testing purposes. Set to false for production.
+    previewMode: true, // Set to true to enable the fake progress bar for local preview. Set to false for production.
     server: {
         name: "SERVER NAME",
         logo: "images/logo.png",
