@@ -13,7 +13,9 @@ const elements = {
     statusPanel: document.getElementById("statusPanel"),
     status: document.getElementById("loadingStatus"),
     resource: document.getElementById("loadingResource"),
+    detail: document.getElementById("loadingDetail"),
     discord: document.getElementById("discord"),
+    website: document.getElementById("website"),
     instagram: document.getElementById("instagram"),
     twitter: document.getElementById("twitter")
 };
@@ -65,13 +67,33 @@ async function fetchAnnouncements() {
 
 function initializeConfig() {
     elements.serverName.innerText = LoadingConfig.server.name;
+    document.documentElement.style.setProperty("--accent-color", LoadingConfig.theme.accentColor || "#4EA8FF");
+
     const backgroundPath = LoadingConfig.server.background.startsWith("images/")
         ? `./${LoadingConfig.server.background}`
         : LoadingConfig.server.background;
     elements.background.style.backgroundImage = `url(${backgroundPath})`;
-    elements.discord.href = LoadingConfig.links.discord;
-    elements.instagram.href = LoadingConfig.links.instagram;
-    elements.twitter.href = LoadingConfig.links.twitter;
+
+    const socialSettings = LoadingConfig.socials || {};
+    const socialLinks = {
+        discord: { enabled: socialSettings.discord !== false, href: LoadingConfig.links.discord },
+        website: { enabled: socialSettings.website !== false, href: LoadingConfig.links.website },
+        instagram: { enabled: socialSettings.instagram !== false, href: LoadingConfig.links.instagram },
+        twitter: { enabled: socialSettings.twitter !== false, href: LoadingConfig.links.twitter }
+    };
+
+    Object.entries(socialLinks).forEach(([key, config]) => {
+        const element = elements[key];
+        if (!element) {
+            return;
+        }
+        if (!config.enabled || !config.href) {
+            element.style.display = "none";
+            return;
+        }
+        element.href = config.href;
+        element.style.display = "flex";
+    });
 
     if (LoadingConfig.layout.logo) {
         elements.logo.src = LoadingConfig.server.logo;
@@ -104,6 +126,17 @@ async function loadAnnouncements() {
         : await fetchAnnouncements();
 
     elements.announcements.innerHTML = "";
+
+    if (!announcements || announcements.length === 0) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.innerHTML = `
+            <h3>No announcements yet</h3>
+            <p>Check back soon for updates from the staff team.</p>`;
+        elements.announcements.appendChild(emptyState);
+        return;
+    }
+
     announcements
         .slice(0, LoadingConfig.announcements.maxCards)
         .forEach(update => {
@@ -112,8 +145,9 @@ async function loadAnnouncements() {
             const readMoreLink = update.readMoreUrl
                 ? `<a href="${update.readMoreUrl}" target="_blank" rel="noopener noreferrer">Read More</a>`
                 : "";
+            const showImage = LoadingConfig.announcements.showImages && update.image;
             card.innerHTML = `
-                ${update.image ? ` <img class="update-image" src="${update.image}"> ` : ""}
+                ${showImage ? ` <img class="update-image" src="${update.image}"> ` : ""}
                 <h3>${update.title}</h3>
                 <p>${update.message}</p>
                 <div class="card-footer">

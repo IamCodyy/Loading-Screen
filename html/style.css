@@ -1,3 +1,6 @@
+:root {
+    --accent-color: #4EA8FF;
+}
 * {
     margin:0;
     padding:0;

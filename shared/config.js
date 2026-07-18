@@ -6,12 +6,19 @@ window.LoadingConfig = {
         background: "images/background.jpg"
     },
     links: {
+        website: "https://yourwebsite.com",
         discord: "https://discord.gg/example",
         instagram: "https://instagram.com/example",
         twitter: "https://twitter.com/example"
     },
     theme: {
-        accentColor: "#8D5CFF"
+        accentColor: "#8D5CFF" // Progress bar color
+    },
+    socials: {
+        website: true,
+        discord: true,
+        instagram: true,
+        twitter: true,
     },
     layout: {
         logo: false,
